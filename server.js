@@ -8,10 +8,10 @@ const mqttClient = mqtt.connect('mqtt://test.mosquitto.org'); // Using a public 
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// Initialize SQLite database
-const db = new sqlite3.Database(':memory:');
+// Initialize SQLite database (using a file-based database for persistence)
+const db = new sqlite3.Database('heartbeat_logs.db');
 
-// Create a table for heartbeat logs
+// Create a table for heartbeat logs if it doesn't exist
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS HeartbeatLogs (timestamp TEXT, message TEXT)");
 });
@@ -24,7 +24,7 @@ function verifyUser(pin) {
 // Route to handle incoming commands
 app.post('/sendCommand', (req, res) => {
     const { pin, command } = req.body;
-    
+
     console.log(`Received command: ${command} with PIN: ${pin}`); // Log the received request
 
     if (verifyUser(pin)) {
@@ -43,6 +43,7 @@ app.post('/sendCommand', (req, res) => {
 app.get('/heartbeatLogs', (req, res) => {
     db.all("SELECT * FROM HeartbeatLogs", [], (err, rows) => {
         if (err) {
+            console.error("Error retrieving logs:", err.message);
             res.status(500).send("Error retrieving logs");
         } else {
             res.json(rows);
@@ -66,9 +67,10 @@ function storeHeartbeatLog(message) {
     const timestamp = new Date().toISOString();
     db.run("INSERT INTO HeartbeatLogs (timestamp, message) VALUES (?, ?)", [timestamp, message], function(err) {
         if (err) {
-            return console.log("Error storing heartbeat log:", err.message);
+            console.error("Error storing heartbeat log:", err.message);
+        } else {
+            console.log("Heartbeat log stored successfully");
         }
-        console.log("Heartbeat log stored successfully");
     });
 }
 
