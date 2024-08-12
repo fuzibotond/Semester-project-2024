@@ -1,7 +1,7 @@
 \subsection{Solution Approach}
-[ Course A ] [ Course B ] [ Course C ] 
+[ Sofware Technology for Internet of Things ] [ Software System Analyses and Verification ]
 \newline
-Botond Füzi, Edvinas Andrijauskas, Bence Boros 
+[ Botond Füzi ] [ Edvinas Andrijauskas ] [ Bence Boros ] 
 \newline
 The proposed solution for the smart door lock system centers around the use of the ESP32 microcontroller, a versatile and powerful platform well-suited for IoT applications due to its built-in Wi-Fi and Bluetooth capabilities. The ESP32 serves as the core controller, managing both the lock mechanism and communication with the mobile application.
 
@@ -9,7 +9,7 @@ The proposed solution for the smart door lock system centers around the use of t
 The hardware architecture includes the ESP32 interfacing with various sensors and actuators, such as a door position sensor, a lock state sensor, and the lock motor itself. These components work in tandem to ensure accurate detection of the door’s status and reliable execution of lock/unlock commands. The system is designed to be modular, allowing for easy expansion or integration of additional security features, such as biometric sensors, in future iterations.
 
 \textbf{Software and Communication Protocol:}
-The software architecture involves the implementation of a robust communication protocol between the ESP32 and the mobile application via MQTT, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock. The system is also designed to handle multiple simultaneous connections, ensuring scalability as the system could be integrated into a larger smart home ecosystem.
+The software architecture involves the implementation of a robust communication protocol between the ESP32 and the mobile application via MQTT \cite{mqtt-protocol}, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock. The system is also designed to handle multiple simultaneous connections, ensuring scalability as the system could be integrated into a larger smart home ecosystem.
 
 \textbf{Fault Detection and Fail-Safe Mechanisms:}
 A key component of the solution is the heartbeat-based fault detection mechanism. The ESP32 periodically sends "heartbeat" signals to the server to confirm its operational status. If the server detects a missing heartbeat or an irregular pattern, it immediately triggers a fail-safe protocol to prevent the lock from responding to any further commands until the issue is resolved. This mechanism is crucial for maintaining the system’s security and reliability, especially in scenarios where communication might be disrupted due to network issues or potential tampering.
