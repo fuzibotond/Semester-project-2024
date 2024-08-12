@@ -1,5 +1,5 @@
 # Semester-project-2024
-**Server:**
+**Server (for local testing):**
 
 - npm init -y
 - npm install express mqtt
