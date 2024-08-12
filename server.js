@@ -1,5 +1,6 @@
 const express = require('express');
 const mqtt = require('mqtt');
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 
 const mqttClient = mqtt.connect('mqtt://test.mosquitto.org'); // Using a public MQTT broker for testing
@@ -7,9 +8,16 @@ const mqttClient = mqtt.connect('mqtt://test.mosquitto.org'); // Using a public 
 // Middleware to parse JSON requests
 app.use(express.json());
 
+// Initialize SQLite database
+const db = new sqlite3.Database(':memory:');
+
+// Create a table for heartbeat logs
+db.serialize(() => {
+    db.run("CREATE TABLE IF NOT EXISTS HeartbeatLogs (timestamp TEXT, message TEXT)");
+});
+
 // Verify User Function
 function verifyUser(pin) {
-    // Add logic to verify user based on the pin
     return pin === '1234'; // Example pin
 }
 
@@ -31,14 +39,38 @@ app.post('/sendCommand', (req, res) => {
     }
 });
 
+// Route to retrieve heartbeat logs
+app.get('/heartbeatLogs', (req, res) => {
+    db.all("SELECT * FROM HeartbeatLogs", [], (err, rows) => {
+        if (err) {
+            res.status(500).send("Error retrieving logs");
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
 // Handle MQTT messages (status updates, heartbeats)
 mqttClient.on('message', (topic, message) => {
+    const msg = message.toString();
     if (topic === 'smartLock/heartbeat') {
-        console.log(`Received heartbeat: ${message.toString()}`);
+        console.log(`Received heartbeat: ${msg}`);
+        storeHeartbeatLog(msg);
     } else {
-        console.log(`Received message from ${topic}: ${message.toString()}`);
+        console.log(`Received message from ${topic}: ${msg}`);
     }
 });
+
+// Store heartbeat log in SQLite database
+function storeHeartbeatLog(message) {
+    const timestamp = new Date().toISOString();
+    db.run("INSERT INTO HeartbeatLogs (timestamp, message) VALUES (?, ?)", [timestamp, message], function(err) {
+        if (err) {
+            return console.log("Error storing heartbeat log:", err.message);
+        }
+        console.log("Heartbeat log stored successfully");
+    });
+}
 
 // Subscribe to necessary MQTT topics
 mqttClient.on('connect', () => {
