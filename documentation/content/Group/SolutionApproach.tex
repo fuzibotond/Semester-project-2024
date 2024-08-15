@@ -3,20 +3,20 @@
 \newline
 [ Botond Füzi ] [ Edvinas Andrijauskas ] [ Bence Boros ] 
 \newline
-The proposed solution for the smart door lock system centers around the use of the ESP32 microcontroller, a versatile and powerful platform well-suited for IoT applications due to its built-in Wi-Fi and Bluetooth capabilities. The ESP32 serves as the core controller, managing both the lock mechanism and communication with the mobile application.
+The proposed solution for the smart door lock system centers around the use of the ESP32 microcontroller, a versatile and powerful platform well-suited for IoT applications due to its built-in Wi-Fi and Bluetooth capabilities. The ESP32 serves as the core controller, managing both the lock mechanism and communication with the server.
 
 \textbf{Hardware and System Architecture:}
-The hardware architecture includes the ESP32 interfacing with various sensors and actuators, such as a door position sensor, a lock state sensor, and the lock motor itself. These components work in tandem to ensure accurate detection of the door’s status and reliable execution of lock/unlock commands. The system is designed to be modular, allowing for easy expansion or integration of additional security features, such as biometric sensors, in future iterations.
+The hardware architecture includes the ESP32 interfacing with a sensor, a LED and a servo motor, which represents the lock itself. These components work in tandem to ensure accurate detection of the door’s status and reliable execution of lock/unlock commands.
 
 \textbf{Software and Communication Protocol:}
-The software architecture involves the implementation of a robust communication protocol between the ESP32 and the mobile application via MQTT \cite{mqtt-protocol}, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock. The system is also designed to handle multiple simultaneous connections, ensuring scalability as the system could be integrated into a larger smart home ecosystem.
+The software architecture involves the implementation of a communication protocol between the ESP32 and the mobile application via MQTT \cite{mqtt-protocol}, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock.
 
 \textbf{Fault Detection and Fail-Safe Mechanisms:}
-A key component of the solution is the heartbeat-based fault detection mechanism. The ESP32 periodically sends "heartbeat" signals to the server to confirm its operational status. If the server detects a missing heartbeat or an irregular pattern, it immediately triggers a fail-safe protocol to prevent the lock from responding to any further commands until the issue is resolved. This mechanism is crucial for maintaining the system’s security and reliability, especially in scenarios where communication might be disrupted due to network issues or potential tampering.
+A crucial feature of the solution is the real-time monitoring and alert system. The ESP32 tracks the door's status and sends a 'heartbeat' to the server whenever the door opens or closes. If the door is detected as open while the lock is engaged, an alert is sent to the server.
 
 \textbf{User Interface and Command Processing:}
-The mobile application, built using Kotlin, provides a user-friendly interface for controlling the lock. Users can easily authenticate and send commands, which are processed by the server before being relayed to the ESP32. The system ensures that only authenticated commands are executed, and any deviations or failures in command processing are logged and reported to the user. This not only enhances security but also provides transparency and trustworthiness, essential for user adoption.
+The mobile application, built using Kotlin, provides a user-friendly interface for controlling the lock. Users can easily authenticate and send commands, which are processed by the server before being relayed to the ESP32. The system ensures that only authenticated commands are executed, and any deviations or failures in command processing are logged and reported to the user.
 
 \textbf{Testing and Validation:}
-The solution approach includes rigorous testing and validation phases, where the system will be subjected to various stress tests, including network disruption, sensor malfunctions, and power outages. The objective is to ensure that the system can handle these scenarios gracefully, maintaining security and reliability without compromising user access. The testing process will also validate the timing constraints, ensuring that the lock responds within the specified 10-second window.
+ The objective is to ensure that the system can handle these scenarios gracefully, maintaining security and reliability without compromising user access. The testing process will also validate the timing constraints, ensuring that the lock responds within the specified 10-second window.
 
