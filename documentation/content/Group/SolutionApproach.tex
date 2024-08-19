@@ -3,13 +3,13 @@
 \newline
 [ Botond Füzi ] [ Edvinas Andrijauskas ] [ Bence Boros ] 
 \newline
-The proposed solution for the smart door lock system centers around the use of the ESP32 microcontroller, a versatile and powerful platform well-suited for IoT applications due to its built-in Wi-Fi and Bluetooth capabilities. The ESP32 serves as the core controller, managing both the lock mechanism and communication with the server.
+The proposed solution uses the ESP32 microcontroller, ideal for IoT with its built-in Wi-Fi and Bluetooth, as the core controller for the smart door lock. It manages the lock mechanism and communicates with the Node.js server. The mobile app offers a user-friendly interface for remote control, real-time alerts, and status monitoring. Together, these components form a secure and effective smart door lock system for remote access control.
 
 \textbf{Hardware and System Architecture:}
 The hardware architecture includes the ESP32 interfacing with a sensor, a LED and a servo motor, which represents the lock itself. These components work in tandem to ensure accurate detection of the door’s status and reliable execution of lock/unlock commands.
 
 \textbf{Software and Communication Protocol:}
-The software architecture involves the implementation of a communication protocol between the ESP32 and the mobile application via MQTT \cite{mqtt-protocol}, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock.
+The software architecture involves the implementation of a communication protocol between the ESP32 and the mobile application via MQTT \cite{mqtt-protocol}, secured with TLS/SSL encryption to prevent unauthorized access. The use of MQTT ensures efficient message handling and low-latency communication, critical for real-time control of the door lock. The server handles HTTP \cite{http}requests from the mobile app, which it translates into MQTT messages and publishes to the appropriate topics.
 
 \textbf{Fault Detection and Fail-Safe Mechanisms:}
 A crucial feature of the solution is the real-time monitoring and alert system. The ESP32 tracks the door's status and sends a 'heartbeat' to the server whenever the door opens or closes. If the door is detected as open while the lock is engaged, an alert is sent to the server.
@@ -19,4 +19,3 @@ The mobile application, built using Kotlin, provides a user-friendly interface f
 
 \textbf{Testing and Validation:}
  The objective is to ensure that the system can handle these scenarios gracefully, maintaining security and reliability without compromising user access. The testing process will also validate the timing constraints, ensuring that the lock responds within the specified 10-second window.
-
